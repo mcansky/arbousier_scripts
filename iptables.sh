@@ -12,10 +12,10 @@ MODULES="ip_tables \
 	ip_conntrack_ftp \
 	ip_nat_ftp"
 
-EXT_IF="wlan0"
-INTERNET_NAT="wlan0"
+EXT_IF="ath0"
+INTERNET_NAT="ath0"
 INT_IF="eth0"
-INT_NET="169.254.255.0/24"
+INT_NET="192.168.42.0/24"
 EXT_NET="192.168.1.0/24"
 
 IPTABLES=`which iptables`
