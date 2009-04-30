@@ -3,7 +3,7 @@
 # basic network filtering and natting
 #
 #
-#	Wild | Livebox (   Wi-Fi   )  eth2 | this box | eth1 --- sekioure network
+#	Wild | Livebox (   Wi-Fi   )  ath0 | FON | eth0 --- lan
 #
 
 MODULES="ip_tables \
@@ -40,7 +40,7 @@ ${IPTABLES} -t nat    -F OUTPUT
 ${IPTABLES} -t nat    -F POSTROUTING
 ${IPTABLES} -t mangle -F PREROUTING
 ${IPTABLES} -t mangle -F OUTPUT
-echo -e "\t\t\t${GREEN}OK${NORMAL}"
+echo -e "\t\t\t\t${GREEN}OK${NORMAL}"
 
 
 ###################################################
@@ -61,7 +61,7 @@ echo -en "${BOLD}${YELLOW}Default policy setup :${NORMAL}"
 ${IPTABLES} -t filter -P INPUT   DROP
 ${IPTABLES} -t filter -P OUTPUT  ACCEPT
 ${IPTABLES} -t filter -P FORWARD DROP
-echo -e "\t\t${GREEN}OK${NORMAL}\n"
+echo -e "\t\t\t\t${GREEN}OK${NORMAL}\n"
 
 
 # filtering
@@ -76,7 +76,7 @@ ${IPTABLES} -A INPUT -i ${INT_IF} -d ${EXT_NET} -j ACCEPT
 ${IPTABLES} -A INPUT -i ${INT_IF} -d ${INT_NET} -p udp -j ACCEPT
 
 ${IPTABLES} -A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT  
-echo -e "\t\t\t\t${GREEN}OK${NORMAL}"
+echo -e "\t\t\t${GREEN}OK${NORMAL}"
 
 
 # nat
