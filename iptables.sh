@@ -27,10 +27,7 @@ NORMAL="\033[m"
 BOLD="\033[1m"
 
 
-###################################################
-## EFFACEMENT DES ANCIENNES REGLES		 ## 
-###################################################
-
+## erasing oldies 
 echo -en "${BOLD}${YELLOW}Erasing old rules :${NORMAL}"
 ${IPTABLES} -t filter -F INPUT
 ${IPTABLES} -t filter -F OUTPUT
@@ -43,20 +40,14 @@ ${IPTABLES} -t mangle -F OUTPUT
 echo -e "\t\t\t\t${GREEN}OK${NORMAL}"
 
 
-###################################################
-## REMISE A ZERO DES CHAINES			 ##
-###################################################
-
+# back to zeros
 echo -en "${BOLD}${YELLOW}Reseting to zero :${NORMAL}"
 ${IPTABLES} -t filter -Z
 ${IPTABLES} -t nat    -Z
 ${IPTABLES} -t mangle -Z
 echo -e "\t\t\t\t${GREEN}OK${NORMAL}"
 
-###################################################
-## MISE EN PLACE DE LA POLITIQUE PAR DEFAUT	 ##
-###################################################
-
+# default policy : tous au karcher !
 echo -en "${BOLD}${YELLOW}Default policy setup :${NORMAL}"
 ${IPTABLES} -t filter -P INPUT   DROP
 ${IPTABLES} -t filter -P OUTPUT  ACCEPT
@@ -84,9 +75,6 @@ echo -en "${BOLD}${YELLOW}Setting up NAT :${NORMAL}"
 ${IPTABLES} -t nat -A POSTROUTING -s ${INT_NET} -o $EXT_IF -j MASQUERADE
 ${IPTABLES} -A FORWARD -i ${INT_IF} -s ${INT_NET} -o ${EXT_IF} -j ACCEPT
 echo -e "\t\t\t\t${GREEN}OK${NORMAL}"
-
-# optimisation
-#${IPTABLES} -A FORWARD -p tcp --tcp-flags SYN,RST SYN -j TCPMSS -o $INTERNET --clamp-mss-to-pmtu
 
 # letting things out
 echo -en "${BOLD}${YELLOW}Letting things out :${NORMAL}"
