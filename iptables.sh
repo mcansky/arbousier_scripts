@@ -27,17 +27,42 @@ NORMAL="\033[m"
 BOLD="\033[1m"
 
 
-# reseting rules
-${IPTABLES} -F
-${IPTABLES} -t nat -F
+###################################################
+## EFFACEMENT DES ANCIENNES REGLES		 ## 
+###################################################
+
+echo -en "${BOLD}${YELLOW}Effacement des anciennes regles :${NORMAL}"
+${IPTABLES} -t filter -F INPUT
+${IPTABLES} -t filter -F OUTPUT
+${IPTABLES} -t filter -F FORWARD
+${IPTABLES} -t nat    -F PREROUTING
+${IPTABLES} -t nat    -F OUTPUT
+${IPTABLES} -t nat    -F POSTROUTING
+${IPTABLES} -t mangle -F PREROUTING
+${IPTABLES} -t mangle -F OUTPUT
+echo -e "\t\t\t${GREEN}OK${NORMAL}"
 
 
-# rejecting everything
-${IPTABLES} -P INPUT DROP
+###################################################
+## REMISE A ZERO DES CHAINES			 ##
+###################################################
 
-${IPTABLES} -P FORWARD ACCEPT
-#${IPTABLES} -P FORWARD DROP 
-#${IPTABLES} -P OUTPUT DROP
+echo -en "${BOLD}${YELLOW}Remise a zero des chaines :${NORMAL}"
+${IPTABLES} -t filter -Z
+${IPTABLES} -t nat    -Z
+${IPTABLES} -t mangle -Z
+echo -e "\t\t\t\t${GREEN}OK${NORMAL}"
+
+###################################################
+## MISE EN PLACE DE LA POLITIQUE PAR DEFAUT	 ##
+###################################################
+
+echo -en "${BOLD}${YELLOW}Mise en place de la polique par defaut :${NORMAL}"
+${IPTABLES} -t filter -P INPUT   DROP
+${IPTABLES} -t filter -P OUTPUT  ACCEPT
+${IPTABLES} -t filter -P FORWARD DROP
+echo -e "\t\t${GREEN}OK${NORMAL}\n"
+
 
 # filtering
 ${IPTABLES} -A INPUT -i lo -j ACCEPT
@@ -63,6 +88,20 @@ ${IPTABLES} -A FORWARD -i ${INT_IF} -s ${INT_NET} -o ${EXT_IF} -j ACCEPT
 ${IPTABLES} -A OUTPUT -s ${INT_NET} -o ${EXT_IF} -j ACCEPT
 ${IPTABLES} -A OUTPUT -o ${EXT_IF} -j ACCEPT
 ${IPTABLES} -A OUTPUT -o ${INT_IF} -p udp -j ACCEPT
+
+###################################################
+## FUCK nimda and codered :)                     ##
+###################################################
+
+echo -e "${BOLD}${YELLOW}Protection contre Nimda et codered :${NORMAL}\t\t\t${GREEN}OK${NORMAL}"
+${IPTABLES} -I INPUT -j DROP -m string -p tcp -s 0.0.0.0/0 --string "c+dir"
+${IPTABLES} -I INPUT -j DROP -m string -p tcp -s 0.0.0.0/0 --string "c+tftp"
+${IPTABLES} -I INPUT -j DROP -m string -p tcp -s 0.0.0.0/0 --string "cmd.exe"
+${IPTABLES} -I INPUT -j DROP -m string -p tcp -s 0.0.0.0/0 --string "default.ida"
+${IPTABLES} -I FORWARD -j DROP -m string -p tcp -s 0.0.0.0/0 --string "c+dir"
+${IPTABLES} -I FORWARD -j DROP -m string -p tcp -s 0.0.0.0/0 --string "c+tftp"
+${IPTABLES} -I FORWARD -j DROP -m string -p tcp -s 0.0.0.0/0 --string "cmd.exe"
+${IPTABLES} -I FORWARD -j DROP -m string -p tcp -s 0.0.0.0/0 --string "default.ida"
 
 # end, dropping what's left
 ${IPTABLES} -A INPUT -j DROP
