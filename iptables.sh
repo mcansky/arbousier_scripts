@@ -65,16 +65,15 @@ ${IPTABLES} -A INPUT -i ${INT_IF} -d ${EXT_NET} -j ACCEPT
 ${IPTABLES} -A INPUT -i ${INT_IF} -d ${INT_NET} -p udp -j ACCEPT
 
 ${IPTABLES} -A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT
-${IPTABLES} -A FORWARD -i ${EXT_IF} -o ${INF_IF} -m state --state RELATED,ESTABLISHED -j ACCEPT 
+${IPTABLES} -A FORWARD -m state --state RELATED,ESTABLISHED -j ACCEPT 
 echo -e "\t\t\t${GREEN}OK${NORMAL}"
 
 
 # nat
 echo -en "${BOLD}${YELLOW}Setting up NAT :${NORMAL}"
 ${IPTABLES} -t nat -A POSTROUTING -s ${INT_NET} -o ${EXT_IF} -j MASQUERADE
-${IPTABLES} -A FORWARD -i ${INT_IF} -s ${INT_NET} -j ACCEPT
-#${IPTABLES} -A FORWARD -i ${INT_IF} -j ACCEPT
-#${IPTABLES} -A FORWARD -i ${EXT_IF} -j ACCEPT
+${IPTABLES} -A FORWARD -i ${INT_IF} -j ACCEPT
+${IPTABLES} -A FORWARD -i ${EXT_IF} -j ACCEPT
 #${IPTABLES} -A FORWARD -i ${INT_IF} -s ${INT_NET} -o ${EXT_IF} -j ACCEPT
 echo -e "\t\t\t\t${GREEN}OK${NORMAL}"
 
