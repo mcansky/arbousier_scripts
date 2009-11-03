@@ -36,8 +36,9 @@ for a_conf in `$LS $CONFIG_BASE/`; do
 			DAEMON_OPTS="start -c $CONFIG_BASE/$a_conf"
 			start-stop-daemon --start --quiet --pidfile $PIDS_DIR/mongrel_$COUNTER.pid \
 												--exec $DAEMON -- $DAEMON_OPTS \
-												-P $PIDS_DIR/mongrel_$COUNTER.pid
-												-l $LOGS_DIR/mongrel_$COUNTER.log
+												-P $PIDS_DIR/mongrel_$COUNTER.pid \
+												-l $LOGS_DIR/mongrel_$COUNTER.log \
+												--user $USER
 			echo "$NAME $COUNTER."
 			;;
 		stop)
@@ -53,8 +54,9 @@ for a_conf in `$LS $CONFIG_BASE/`; do
 			sleep 1
 			start-stop-daemon --start --quiet --pidfile $PIDS_DIR/mongrel_$COUNTER.pid \
 												--exec $DAEMON -- $DAEMON_OPTS \
-												-P $PIDS_DIR/mongrel_$COUNTER.pid
-												-l $LOGS_DIR/mongrel_$COUNTER.log
+												-P $PIDS_DIR/mongrel_$COUNTER.pid \
+												-l $LOGS_DIR/mongrel_$COUNTER.log \
+												--user $USER
 			echo "$NAME $COUNTER."
 		;;
 		reload)
