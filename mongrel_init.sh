@@ -29,16 +29,16 @@ set -e
 
 # do the work for each config file in the mongrel dir
 COUNTER=0
-for a_conf in `$LS $CONFIG_BASE/`; do
+for a_conf in `$LS $CONFIG_BASE`; do
 	case "$1" in
 		start)
 			echo -n "Starting $DESC: "
 			DAEMON_OPTS="start -C $CONFIG_BASE/$a_conf"
 			start-stop-daemon --start --quiet --pidfile $PIDS_DIR/mongrel_$COUNTER.pid \
-												--exec $DAEMON -- $DAEMON_OPTS \
+												--exec $DAEMON -- $DAEMON_OPTS \
 												-P $PIDS_DIR/mongrel_$COUNTER.pid \
 												-l $LOGS_DIR/mongrel_$COUNTER.log \
-												--user $USER
+												--user $USER --group $USER
 			echo "$NAME $COUNTER."
 			;;
 		stop)
@@ -57,7 +57,7 @@ for a_conf in `$LS $CONFIG_BASE/`; do
 												--exec $DAEMON -- $DAEMON_OPTS \
 												-P $PIDS_DIR/mongrel_$COUNTER.pid \
 												-l $LOGS_DIR/mongrel_$COUNTER.log \
-												--user $USER
+												--user $USER --group $USER
 			echo "$NAME $COUNTER."
 		;;
 		reload)
