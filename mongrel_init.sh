@@ -33,9 +33,7 @@ for a_conf in `$LS $CONFIG_BASE`; do
 	case "$1" in
 		start)
 			echo -n "Starting $DESC: "
-			DAEMON_OPTS="start -C $CONFIG_BASE/$a_conf"
-			start-stop-daemon --start --quiet --pidfile $PIDS_DIR/mongrel_$COUNTER.pid \
-												--exec $DAEMON -- $DAEMON_OPTS \
+			$DAEMON start -d -C $CONFIG_BASE/$a_conf \
 												-P $PIDS_DIR/mongrel_$COUNTER.pid \
 												-l $LOGS_DIR/mongrel_$COUNTER.log \
 												--user $USER --group $USER
@@ -43,28 +41,18 @@ for a_conf in `$LS $CONFIG_BASE`; do
 			;;
 		stop)
 			echo -n "Stopping $DESC: "
-			start-stop-daemon --stop --quiet --pidfile $PIDS_DIR/mongrel_$COUNTER.pid \
-							--exec $DAEMON
+			$DAEMON stop -P $PIDS_DIR/mongrel_$COUNTER.pid
 			echo "$NAME $COUNTER."
 		;;
-		restart|force-reload)
+		restart|force-reload|reload)
 			echo -n "Restarting $DESC: "
 			DAEMON_OPTS="start -C $CONFIG_BASE/$a_conf"
-			start-stop-daemon --stop --quiet --pidfile $PIDS_DIR/mongrel_$COUNTER.pid\
-												--exec $DAEMON
+			$DAEMON stop -P $PIDS_DIR/mongrel_$COUNTER.pid
 			sleep 1
-			start-stop-daemon --start --quiet --pidfile $PIDS_DIR/mongrel_$COUNTER.pid \
-												--exec $DAEMON -- $DAEMON_OPTS \
+			$DAEMON start -d -C $CONFIG_BASE/$a_conf \
 												-P $PIDS_DIR/mongrel_$COUNTER.pid \
 												-l $LOGS_DIR/mongrel_$COUNTER.log \
 												--user $USER --group $USER
-			echo "$NAME $COUNTER."
-		;;
-		reload)
-			echo -n "Reloading $DESC configuration: "
-			start-stop-daemon --stop --signal HUP --quiet 
-												--pidfile $PIDS_DIR/mongrel_$COUNTER.pid \
-												--exec $DAEMON
 			echo "$NAME $COUNTER."
 		;;
 		*)
