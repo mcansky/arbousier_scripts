@@ -75,15 +75,19 @@ generate("jquery:install")
 
 docs = <<-DOCS
 
-Run the following commands to complete the setup of #{app_name.humanize}:
+Congratulations #{app_name.humanize} is generated with :
+  * factory girl
+  * rspec
+  * haml
+  * jquery
+  * 960.gs
+  * thintre
 
+Now simply go in your app
 % cd #{app_name}
-% rvm use --create --rvmrc default@#{app_name}
-% gem install bundler
-% bundle install
-% script/rails generate rspec:install
-% script/rails generate jquery:install
 
 DOCS
 
 log DOCS
+
+rm "basic.rb"
