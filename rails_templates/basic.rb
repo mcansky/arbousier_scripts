@@ -18,8 +18,6 @@ application generators
 get "https://github.com/nathansmith/960-Grid-System/blob/master/code/css/960.css", "public/stylesheets/960.css"
 get "https://github.com/nathansmith/960-Grid-System/blob/master/code/css/reset.css", "public/stylesheets/reset.css"
 get "https://github.com/nathansmith/960-Grid-System/blob/master/code/css/text.css", "public/stylesheets/text.css"
-<link href='http://fonts.googleapis.com/css?family=OFL+Sorts+Mill+Goudy+TT' rel='stylesheet' type='text/css'>
-<link href='http://fonts.googleapis.com/css?family=Molengo' rel='stylesheet' type='text/css'>
 
 log "Generating layout"
 
