@@ -51,6 +51,14 @@ log "Initializing git repository"
 git :init
 git :add => "."
 
+if yes?("Would you like to install Devise?")
+  gem("devise")
+  generate("devise:install")
+  model_name = ask("What would you like the user model to be called? [user]")
+  model_name = "user" if model_name.blank?
+  generate("devise", model_name)
+end
+
 log "Running rvm"
 run "cd #{app_name}"
 run "rvm use --create --rvmrc default@#{app_name}"
@@ -62,10 +70,10 @@ log "Running bundle install"
 run "bundle install --path bundler --without production"
 
 log "Running rspec:install"
-run "script/rails generate rspec:install"
+generate("rspec:install")
 
 log "Running jquery:install"
-run "script/rails generate jquery:install"
+generate("jquery:install")
 
 docs = <<-DOCS
 
