@@ -60,10 +60,15 @@ run "bundle install --path bundler --without production"
 
 if yes?("Would you like to install Devise?")
   gem("devise")
+  log "Running bundle install"
+  run "bundle install --path bundler --without production"
   generate("devise:install")
   model_name = ask("What would you like the user model to be called? [user]")
   model_name = "user" if model_name.blank?
   generate("devise", model_name)
+else
+  log "Running bundle install"
+  run "bundle install --path bundler --without production"
 end
 
 log "Running rspec:install"
@@ -80,13 +85,12 @@ Congratulations #{app_name.humanize} is generated with :
   * haml
   * jquery
   * 960.gs
-  * thintre
+  * thin
 
 Now simply go in your app
 % cd #{app_name}
-
 DOCS
 
-log DOCS
+log docs
 
 rm "basic.rb"
