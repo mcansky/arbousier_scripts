@@ -20,12 +20,11 @@ gem "pg", :group => [:production]
 # doc goodness
 gem "yard"
 
-# generators setup
-generators = <<-GENERATORS
-  g.test_framework :rspec, :fixture => true, :views => false
-  g.fixture_replacement :factory_girl, :dir => "spec/factories"
-GENERATORS
-application generators
+#create rspec.rb in the config/initializers directory to use rspec as the default test framework
+initializer 'rspec.rb', <<-EOF
+  Rails.application.config.generators.test_framework :rspec, :fixture => true, :views => false
+  Rails.application.config.fixture_replacement :factory_girl, :dir => "spec/factories"
+EOF
 
 # getting 960.gs css files
 get "https://github.com/nathansmith/960-Grid-System/blob/master/code/css/960.css", "public/stylesheets/960.css"
