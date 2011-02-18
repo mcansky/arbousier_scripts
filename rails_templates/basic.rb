@@ -21,19 +21,19 @@ gem "pg", :group => [:production]
 gem "yard"
 
 #create rspec.rb in the config/initializers directory to use rspec as the default test framework
-initializer 'rspec.rb', <<-EOF
-  Rails.application.config.generators.test_framework :rspec, :fixture => true, :views => false
-  Rails.application.config.fixture_replacement :factory_girl, :dir => "spec/factories"
-EOF
+#initializer 'rspec.rb', <<-EOF
+#  Rails.application.config.generators.test_framework :rspec, :fixture => true, :views => false
+#  Rails.application.config.fixture_replacement :factory_girl, :dir => "spec/factories"
+#EOF
 
 # getting 960.gs css files
-get "https://github.com/nathansmith/960-Grid-System/blob/master/code/css/960.css", "public/stylesheets/960.css"
-get "https://github.com/nathansmith/960-Grid-System/blob/master/code/css/reset.css", "public/stylesheets/reset.css"
-get "https://github.com/nathansmith/960-Grid-System/blob/master/code/css/text.css", "public/stylesheets/text.css"
+get "https://github.com/nathansmith/960-Grid-System/raw/master/code/css/960.css", "public/stylesheets/960.css"
+get "https://github.com/nathansmith/960-Grid-System/raw/master/code/css/reset.css", "public/stylesheets/reset.css"
+get "https://github.com/nathansmith/960-Grid-System/raw/master/code/css/text.css", "public/stylesheets/text.css"
 # get the base sass file
-get "https://github.com/mcansky/arbousier_scripts/blob/master/sass/style.sass", "public/stylesheets/sass/style.sass"
+get "https://github.com/mcansky/arbousier_scripts/raw/master/sass/style.sass", "public/stylesheets/sass/style.sass"
 # get rake tasks
-get "https://github.com/mcansky/arbousier_scripts/blob/master/rake_tasks/undies.rb", "lib/tasks/undies.rake"
+get "https://github.com/mcansky/arbousier_scripts/raw/master/rake_tasks/undies.rb", "lib/tasks/undies.rake"
 
 # taking care of the layout
 log "Generating layout"
@@ -55,6 +55,7 @@ layout = <<-LAYOUT
   = yield
 LAYOUT
 
+remove_file "public/index.html"
 remove_file "app/views/layouts/application.html.erb"
 create_file "app/views/layouts/application.html.haml", layout
 
@@ -86,31 +87,52 @@ if yes?("Would you like to install Devise?")
   model_name = ask("What would you like the user model to be called? [user]")
   model_name = "user" if model_name.blank?
   generate("devise", model_name)
+  log <<-DOCS
+
+  Congratulations #{app_name.humanize} is generated with :
+    * factory girl
+    * rspec
+    * haml
+    * jquery
+    * 960.gs
+    * thin
+    * devise
+
+  Now simply go in your app
+  % cd #{app_name}
+  DOCS
 else
-  log "Running bundle install"
-  run "bundle install --path bundler --without production"
+  if yes?("Do you want to run bundle install now ?")
+    log "Running bundle install"
+    run "bundle install --path bundler --without production"
+
+    log "Running rspec:install"
+    generate("rspec:install")
+
+    log "Running jquery:install"
+    generate("jquery:install")
+    log <<-DOCS
+
+    Congratulations #{app_name.humanize} is generated with :
+      * factory girl
+      * rspec
+      * haml
+      * jquery
+      * 960.gs
+      * thin
+
+    Now simply go in your app
+    % cd #{app_name}
+    DOCS
+  else
+    log <<-DOCS
+
+    Congratulations #{app_name.humanize} is generated but you need to run :
+    % cd #{app_name}
+    % rails g rspec:install
+    % rails g jquery:install
+    DOCS
+  end
 end
 
-log "Running rspec:install"
-generate("rspec:install")
-
-log "Running jquery:install"
-generate("jquery:install")
-
-docs = <<-DOCS
-
-Congratulations #{app_name.humanize} is generated with :
-  * factory girl
-  * rspec
-  * haml
-  * jquery
-  * 960.gs
-  * thin
-
-Now simply go in your app
-% cd #{app_name}
-DOCS
-
-log docs
-
-run "rm basic.rb"
+run "rm ../basic.rb"
