@@ -1,6 +1,6 @@
 # DocRaptor Rails howto
 
-First you need to get the gem :
+First you need to get the gem (https://github.com/expectedbehavior/doc_raptor_gem):
 
     # install (remember to include it in your code in this case)
     > gem install docraptor
