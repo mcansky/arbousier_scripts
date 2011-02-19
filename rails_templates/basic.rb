@@ -19,7 +19,11 @@ gem "thin"
 gem "pg", :group => [:production]
 # doc goodness
 gem "yard"
-
+devise = false
+if yes?("Would you like to install Devise?")
+  gem("devise")
+  devise = true
+end
 #create rspec.rb in the config/initializers directory to use rspec as the default test framework
 #initializer 'rspec.rb', <<-EOF
 #  Rails.application.config.generators.test_framework :rspec, :fixture => true, :views => false
@@ -27,13 +31,15 @@ gem "yard"
 #EOF
 
 # getting 960.gs css files
-get "https://github.com/nathansmith/960-Grid-System/raw/master/code/css/960.css", "public/stylesheets/960.css"
-get "https://github.com/nathansmith/960-Grid-System/raw/master/code/css/reset.css", "public/stylesheets/reset.css"
-get "https://github.com/nathansmith/960-Grid-System/raw/master/code/css/text.css", "public/stylesheets/text.css"
+nsmith_960_gs = "https://github.com/nathansmith/960-Grid-System/raw/master/code/css"
+get "#{nsmith_960_gs}/960.css", "public/stylesheets/960.css"
+get "#{nsmith_960_gs}/reset.css", "public/stylesheets/reset.css"
+get "#{nsmith_960_gs}/text.css", "public/stylesheets/text.css"
 # get the base sass file
-get "https://github.com/mcansky/arbousier_scripts/raw/master/sass/style.sass", "public/stylesheets/sass/style.sass"
+github_home = "https://github.com/mcansky/arbousier_scripts/raw/master"
+get "#{github_home}/sass/style.sass", "public/stylesheets/sass/style.sass"
 # get rake tasks
-get "https://github.com/mcansky/arbousier_scripts/raw/master/rake_tasks/undies.rb", "lib/tasks/undies.rake"
+get "#{github_home}/rake_tasks/undies.rb", "lib/tasks/undies.rake"
 
 # taking care of the layout
 log "Generating layout"
@@ -72,21 +78,23 @@ log "Initializing git repository"
 git :init
 git :add => "."
 
-# rvm rc creation
-log "Running rvm"
-run "rvm use --create --rvmrc ruby-1.9.2-p0@#{app_name}"
 
-log "Installing bundler"
-run "gem install bundler"
-
-if yes?("Would you like to install Devise?")
-  gem("devise")
+if yes?("Do you want to run bundle install now ?")
   log "Running bundle install"
   run "bundle install --path bundler --without production"
-  generate("devise:install")
-  model_name = ask("What would you like the user model to be called? [user]")
-  model_name = "user" if model_name.blank?
-  generate("devise", model_name)
+  
+  if devise
+    generate("devise:install")
+    model_name = ask("What would you like the user model to be called? [user]")
+    model_name = "user" if model_name.blank?
+    generate("devise", model_name)
+  end
+
+  log "Running rspec:install"
+  generate("rspec:install")
+
+  log "Running jquery:install"
+  generate("jquery:install")
   log <<-DOCS
 
   Congratulations #{app_name.humanize} is generated with :
@@ -96,43 +104,18 @@ if yes?("Would you like to install Devise?")
     * jquery
     * 960.gs
     * thin
-    * devise
 
   Now simply go in your app
   % cd #{app_name}
   DOCS
 else
-  if yes?("Do you want to run bundle install now ?")
-    log "Running bundle install"
-    run "bundle install --path bundler --without production"
+  log <<-DOCS
 
-    log "Running rspec:install"
-    generate("rspec:install")
-
-    log "Running jquery:install"
-    generate("jquery:install")
-    log <<-DOCS
-
-    Congratulations #{app_name.humanize} is generated with :
-      * factory girl
-      * rspec
-      * haml
-      * jquery
-      * 960.gs
-      * thin
-
-    Now simply go in your app
-    % cd #{app_name}
-    DOCS
-  else
-    log <<-DOCS
-
-    Congratulations #{app_name.humanize} is generated but you need to run :
-    % cd #{app_name}
-    % rails g rspec:install
-    % rails g jquery:install
-    DOCS
-  end
+  Congratulations #{app_name.humanize} is generated but you need to run :
+  % cd #{app_name}
+  % rails g devise:install
+  % rails g devise your_model
+  % rails g rspec:install
+  % rails g jquery:install
+  DOCS
 end
-
-run "rm ../basic.rb"
