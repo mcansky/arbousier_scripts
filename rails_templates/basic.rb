@@ -119,3 +119,5 @@ else
   % rails g jquery:install
   DOCS
 end
+
+run("rm ../basic.rb")
