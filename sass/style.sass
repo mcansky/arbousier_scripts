@@ -1,11 +1,28 @@
 $base_font: 'Molengo', 'Adobe Caslon Pro', 'Hoefler Text', Garamond, serif
-$title_font: 'Myriad Pro', Corbel, 'Helvetica Neue', Helvetica, 'Lucida Grande', Verdana, sans-serif
+$title_font: 'Cyprum', 'Myriad Pro', Corbel, 'Helvetica Neue', Helvetica, 'Lucida Grande', Verdana, sans-serif
+
+$background_banner: #333
+
+$color_banner: #FFF
 
 *
-	font-family: $base_font
+  font-family: $base_font
 
 h1, h2, h3, h4, h5
-	font-family: $title_font
+  font-family: $title_font
+
+a, p, li
+  font-size: 12pt
 
 .clear
-	clear: both
+  clear: both
+
+a
+  text-decoration: none
+  font-weight: bold
+
+#banner, #footer
+  width: 100%
+  padding: 10px
+  background: $background_banner
+  color: $color_banner

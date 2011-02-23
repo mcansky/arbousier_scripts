@@ -17,6 +17,8 @@ gem "jquery-rails"
 gem "thin"
 # mostly for heroku
 gem "pg", :group => [:production]
+# good stuff
+gem "rails_config"
 # doc goodness
 gem "yard"
 devise = false
@@ -50,6 +52,7 @@ layout = <<-LAYOUT
 %title #{app_name.humanize}
 %link{:href => "http://fonts.googleapis.com/css?family=OFL+Sorts+Mill+Goudy+TT", :rel => "stylesheet", :type => "text/css"}
 %link{:href => "http://fonts.googleapis.com/css?family=Molengo", :rel => "stylesheet", :type => "text/css"}
+%link{:href => "http://fonts.googleapis.com/css?family=Cuprum", :rel => "stylesheet", :type => "text/css"}
 = stylesheet_link_tag "reset.css"
 = stylesheet_link_tag "text.css"
 = stylesheet_link_tag "960.css"
@@ -57,8 +60,18 @@ layout = <<-LAYOUT
 = javascript_include_tag :defaults
 = csrf_meta_tag
 %body
+%div#banner
+  %div.container_16{:id => "banner_grid"}
+    %div.grid_16
+      %h1 #{app_name.humanize}
 %div.container_16{:id => "main"}
   = yield
+%div.clear
+%div#footer
+  %div.container_16{:id => "footer_grid"}
+    %div.grid_16.footer
+      #{app_name.humanize}
+      = link_to "Arbousier.info", "http://www.arbousier.info"
 LAYOUT
 
 remove_file "public/index.html"
@@ -90,6 +103,9 @@ if yes?("Do you want to run bundle install now ?")
     generate("devise", model_name)
   end
 
+  log "Running rails_config:install"
+  generate("rails_config:install")
+
   log "Running rspec:install"
   generate("rspec:install")
 
@@ -115,6 +131,7 @@ else
   % cd #{app_name}
   % rails g devise:install
   % rails g devise your_model
+  % rails g rails_config:install
   % rails g rspec:install
   % rails g jquery:install
   DOCS
