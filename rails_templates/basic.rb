@@ -98,7 +98,6 @@ log "Initializing git repository"
 git :init
 git :add => "."
 
-
 if yes?("Do you want to run bundle install now ?")
   log "Running bundle install"
   run "bundle install --path bundler --without production"
@@ -127,6 +126,9 @@ if yes?("Do you want to run bundle install now ?")
   DRSPEC
   create_file ".rspec", dot_rspec
 
+  # get the spec helper
+  get "#{github_home}/watchr/spec_helper.rb", "spec/spec_helper.rb"
+
   log <<-DOCS
 
   Congratulations #{app_name.humanize} is generated with :
@@ -140,9 +142,14 @@ if yes?("Do you want to run bundle install now ?")
 
   Now simply go in your app
   % cd #{app_name}
-  And edit 'spec/spec_helper.rb'
   DOCS
 else
+  remove_file ".rspec"
+  dot_rspec = <<-DRSPEC
+  --color --drb
+  DRSPEC
+  create_file ".rspec", dot_rspec
+
   log <<-DOCS
 
   Congratulations #{app_name.humanize} is generated but you need to run :
@@ -154,8 +161,7 @@ else
   % rails g jquery:install
   % bundle exec spork --bootstrap
   % mate spec/spec_helper.rb
-  
-  You also need to add '--drb' to '.rspec'
+  You need to remove or comment the line using Devise helper
   DOCS
 end
 
