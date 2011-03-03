@@ -17,6 +17,16 @@ require "uri"
 DEVS = Rails.root.to_s + "/config/devs.yml"
 
 namespace :undies do
+  desc "Run watchr"
+  task :watchr do
+    sh %{bundle exec watchr config/watchr.rb}
+  end
+
+  desc "Run spork"
+  task :spork do
+    sh %{bundle exec spork}
+  end
+
   desc "generate changelog with nice clean output"
   task :changelog, :since_c, :until_c do |t,args|
     since_c = args[:since_c] || `git tag | head -1`.chomp
