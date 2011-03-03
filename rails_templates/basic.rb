@@ -14,7 +14,7 @@ gem 'hassle', :git => 'git://github.com/koppen/hassle.git'
 # replacement for prototype.js
 gem "jquery-rails"
 # http server
-gem "thin"
+gem "unicorn"
 # mostly for heroku
 gem "pg", :group => [:production]
 # good stuff
@@ -26,6 +26,10 @@ if yes?("Would you like to install Devise?")
   gem("devise")
   devise = true
 end
+gem 'spork', '~> 0.9.0.rc', :group => :test
+gem "watchr", :group => :test
+
+
 #create rspec.rb in the config/initializers directory to use rspec as the default test framework
 #initializer 'rspec.rb', <<-EOF
 #  Rails.application.config.generators.test_framework :rspec, :fixture => true, :views => false
@@ -42,6 +46,9 @@ github_home = "https://github.com/mcansky/arbousier_scripts/raw/master"
 get "#{github_home}/sass/style.sass", "public/stylesheets/sass/style.sass"
 # get rake tasks
 get "#{github_home}/rake_tasks/undies.rb", "lib/tasks/undies.rake"
+
+# get the watchr config (undies contains the watchr and spork tasks)
+get "#{github_home}/watchr/watchr.rb", "config/watchr.rb"
 
 # taking care of the layout
 log "Generating layout"
@@ -111,6 +118,15 @@ if yes?("Do you want to run bundle install now ?")
 
   log "Running jquery:install"
   generate("jquery:install")
+
+  log "Bootstrapping Spork"
+  run("bundle exec spork --bootstrap")
+  remove_file ".rspec"
+  dot_rspec <<-DRSPEC
+  --color --drb
+  DRSPEC
+  create_file ".rspec", dot_rspec
+
   log <<-DOCS
 
   Congratulations #{app_name.humanize} is generated with :
@@ -120,9 +136,11 @@ if yes?("Do you want to run bundle install now ?")
     * jquery
     * 960.gs
     * thin
+    * watchr & spork
 
   Now simply go in your app
   % cd #{app_name}
+  And edit 'spec/spec_helper.rb'
   DOCS
 else
   log <<-DOCS
@@ -134,6 +152,10 @@ else
   % rails g rails_config:install
   % rails g rspec:install
   % rails g jquery:install
+  % bundle exec spork --bootstrap
+  % mate spec/spec_helper.rb
+  
+  You also need to add '--drb' to '.rspec'
   DOCS
 end
 
