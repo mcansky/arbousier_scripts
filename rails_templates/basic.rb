@@ -122,7 +122,7 @@ if yes?("Do you want to run bundle install now ?")
   log "Bootstrapping Spork"
   run("bundle exec spork --bootstrap")
   remove_file ".rspec"
-  dot_rspec <<-DRSPEC
+  dot_rspec = <<-DRSPEC
   --color --drb
   DRSPEC
   create_file ".rspec", dot_rspec
