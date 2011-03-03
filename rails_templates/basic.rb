@@ -28,6 +28,7 @@ if yes?("Would you like to install Devise?")
 end
 gem 'spork', '~> 0.9.0.rc', :group => :test
 gem "watchr", :group => :test
+gem "shoulda", "2.11.3", :group => :test
 
 
 #create rspec.rb in the config/initializers directory to use rspec as the default test framework
