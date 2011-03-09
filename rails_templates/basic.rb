@@ -4,9 +4,6 @@
 # create a basic app with rspec, factory girl, haml, some good gems and basic layout
 
 ## first the gems
-# test stuff
-gem "factory_girl_rails", ">= 1.0.0", :group => :test
-gem "rspec-rails", ">= 2.2.1", :group => [:development, :test]
 # shiny markup stuff
 gem "haml-rails", ">= 0.3.4"
 # wooot vars in css
@@ -21,14 +18,20 @@ gem "pg", :group => [:production]
 gem "rails_config"
 # doc goodness
 gem "yard"
+# test goodness too
+gem 'spork', '~> 0.9.0.rc', :group => :test
+gem "watchr", :group => :test
+gem "shoulda", "2.11.3", :group => :test
+gem "factory_girl_rails", ">= 1.0.0", :group => :test
+gem "rspec-rails", ">= 2.2.1", :group => [:development, :test]
+gem "factory_girl", "1.3.3", :group => [:test]
 devise = false
 if yes?("Would you like to install Devise?")
   gem("devise")
   devise = true
+  # auth stuff
+  gem "cancan"
 end
-gem 'spork', '~> 0.9.0.rc', :group => :test
-gem "watchr", :group => :test
-gem "shoulda", "2.11.3", :group => :test
 
 
 #create rspec.rb in the config/initializers directory to use rspec as the default test framework
@@ -65,7 +68,7 @@ layout = <<-LAYOUT
 = stylesheet_link_tag "text.css"
 = stylesheet_link_tag "960.css"
 = stylesheet_link_tag "style"
-= javascript_include_tag :defaults
+= javascript_include_tag "jquery.js", "rails.js", "application.js"
 = csrf_meta_tag
 %body
 %div#banner

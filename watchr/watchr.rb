@@ -33,7 +33,7 @@ end
 
 def run_all_features
   system('clear')
-  run "cucumber"
+  run "rake spec"
 end
 
 def related_test_files(path)
