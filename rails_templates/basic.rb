@@ -76,6 +76,10 @@ layout = <<-LAYOUT
     %div.grid_16
       %h1 #{app_name.humanize}
 %div.container_16{:id => "main"}
+  %div.grid_16
+    %p.notice= notice
+    %p.alert= alert
+  %div.clear
   = yield
 %div.clear
 %div#footer
