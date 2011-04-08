@@ -1,6 +1,14 @@
 # the tool to create VMs
+require "rubygems" # ruby1.9 doesn't "require" it though
+require "thor"
+
 class JesterSmith < Thor
   include Thor::Actions
+
+  def dummy?(config)
+    return true if config.dummy == 1
+    return false
+  end
 
   argument :name, :version, :ip, :storage
 
@@ -11,6 +19,9 @@ class JesterSmith < Thor
   name = name.downcase
   version = version.downcase
   for_line = "for #{name} on #{storage}"
+  if dummy?(config)
+    config.build_dir = "/tmp/jester"
+  end
 
   # creating dirs
   FileUtils.mkdir_p(config.log_dir)
@@ -137,3 +148,4 @@ class JesterSmith < Thor
 
   # DONE
 end
+JesterSmith.start
