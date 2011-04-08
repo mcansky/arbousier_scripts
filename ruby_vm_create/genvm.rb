@@ -44,7 +44,8 @@ class JesterSmith < Thor
   run("mount /dev/#{storage}/#{n_name} #{config.build_dir}")
 
   # debootstrap
-  raise ArgumentError, "version not known"
+  versions = ["lenny", "squeeze32", "squeeze64"]
+  raise ArgumentError, "version not known" if !versions.include?(version)
   # default args aka squeeze 64
   arch = "amd64"
   kernel = "linux-image-2.6-amd64"
