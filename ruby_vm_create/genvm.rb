@@ -6,7 +6,16 @@ require "thor"
 class JesterSmith < Thor
   include Thor::Actions
 
-  argument :name, :version, :ip, :storage
+  argument :name, :type => :string, :desc => "the name of the vm"
+  argument :version, :type => :string, :desc => "the version of debian you want to use"
+  argument :ip, :type => :string, :desc => "the ip address you want the vm to use"
+  argument :storage, :type => :string, :desc => "the storage vg you want to use"
+  desc "Create a new Xen VM"
+
+  raise ArgumentError, "Name is undefined" if (name == nil) || (name == "")
+  raise ArgumentError, "Version is undefined" if (version == nil) || (version == "")
+  raise ArgumentError, "Ip is undefined" if (ip == nil) || (ip == "")
+  raise ArgumentError, "Storage is undefined" if (storage == nil) || (storage == "")
 
   # loading some vars
   config = YAML::parse( File.open( "config.yml" ) )
