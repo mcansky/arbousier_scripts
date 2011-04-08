@@ -43,10 +43,10 @@ class JesterSmith < Thor
 
     # creating the fs
     say "Creating filesystem #{for_line}", :green
-    run("lvcreate -L#{config["lv_size"]} -n #{n_name} -n #{storage}")
+    run("lvcreate -L#{config["lv_size"]} -n #{n_name} #{storage}")
     # creating the swap
     say "Creating swap #{for_line}", :green
-    run("lvcreate -L#{config["lv_swap_size"]} -n swap_#{n_name} -n #{storage}")
+    run("lvcreate -L#{config["lv_swap_size"]} -n swap_#{n_name} #{storage}")
     # making the fs
     say "Mkfs filesystem #{for_line}", :green
     run("mkfs -t ext4 /dev/#{storage}/#{n_name}")
